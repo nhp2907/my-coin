@@ -1,0 +1,845 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<title>My coin</title>
+	<meta name="keywords" content="Mini blockchain project">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"
+	        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"
+	        integrity="sha384-kW+oWsYx3YpxvjtZjFXqazFpA7UP/MbiY4jvs+RWZo2+N94PFZ36T6TFkc9O3qoB"
+	        crossorigin="anonymous"></script>
+
+	<script src="https://unpkg.com/mathjs@5.2.2/dist/math.min.js"></script>
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+	      integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Crimson+Text:400,400i,600|Montserrat:200,300,400"
+	      rel="stylesheet">
+	<link rel="stylesheet" href="./assets/css/bootstrap/bootstrap.css">
+
+	<link rel="stylesheet" href="./assets/fonts/fontawesome/css/font-awesome.min.css">
+
+	<link href="assets/css/style1.css" rel="stylesheet"/>
+	<script src="assets/js/modernizr.js"></script>
+
+	<link rel="stylesheet" href="./assets/css/slick.css">
+	<link rel="stylesheet" href="./assets/css/slick-theme.css">
+	<link rel="stylesheet" href="./assets/css/helpers.css">
+	<link rel="stylesheet" href="./assets/css/style.css">
+	<link rel="stylesheet" href="./assets/css/landing-2.css">
+</head>
+<body data-spy="scroll" data-target="#pb-navbar" data-offset="200" ng-app="BlockExplorer">
+<nav class="navbar navbar-expand-lg navbar-dark pb_navbar pb_scrolled-light" id="pb-navbar">
+	<div class="container">
+		<a class="navbar-brand" href="#firstSection"><img src="./assets/images/logo_blockchain.png"><img/></a>
+		<button class="navbar-toggler mr-auto" type="button" data-toggle="collapse" data-target="#probootstrap-navbar"
+		        aria-controls="probootstrap-navbar" aria-expanded="false" aria-label="Toggle navigation">Menu</button>
+		<div class="collapse navbar-collapse" id="probootstrap-navbar">
+			<ul class="navbar-nav mr-auto">
+				<li class="nav-item"><a class="nav-link" href="#section-home">Block Explorer</a></li>
+				<li class="nav-item"><a class="nav-link" href="#section-features">My wallet</a></li>
+				<li class="nav-item"><a class="nav-link" href="#makeTransaction">Make a deal</a></li>
+				<li class="nav-item"><a class="nav-link" href="#lastTransactions" style="color:gold !important;"><i
+						class="fas fa-coins"></i> כריה</a></li>
+				<li class="nav-item"><a class="nav-link" href="#about">About Blockchain</a></li>
+
+				<li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a id="newWalletModalTrigger" class="nav-link" href=""
+				                                                                     target="_blank" data-toggle="modal"
+				                                                                     data-target="#newWalletModal"><span
+						class="pb_rounded-4 px-4">Take a friend</span></a></li>
+			</ul>
+		</div>
+	</div>
+</nav>
+
+<!-- Modal -->
+<div class="modal fade text-center py-5 subscribeModal-lg" id="inviteModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true" ng-controller="inviteController">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="top-strip"></div>
+				<h3 class="pt-5 mb-0 text-secondary">Invite member!</h3>
+				<p class="pb-1 text-muted"><small>Send a friend an invitation and at the end of his registration you will receive 50 coins for the digital wallet your!</small></p>
+				<form>
+					<div class="input-group mb-3 w-75 mx-auto">
+						<input type="text" class="form-control" placeholder="Enter the guest's email address here"
+						       aria-label="Recipient's username" aria-describedby="button-addon2" ng-model="email">
+						<div class="input-group-append">
+							<button class="btn btn-primary" type="button" id="button-addon2" ng-click="checkeys(email)">
+								<i class="fa fa-paper-plane" style="color: #fff;"></i></button>
+						</div>
+					</div>
+				</form>
+
+				<small>
+					<mark>Please bring a private and public key for your verification.</mark>
+				</small>
+				<p class="pb-1 text-muted"><small>The email address is not stored in the system and is only needed to send the order.</small></p>
+				<div class="bottom-strip"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END nav -->
+
+<div class="modal fade text-center py-5 subscribeModal-lg" id="newWalletModal" tabindex="-1" role="dialog"
+     aria-labelledby="exampleModalLabel" aria-hidden="true" ng-controller="inviteController">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-body">
+				<div class="top-strip"></div>
+				<h3 class="pt-5 mb-0 text-secondary">We created new wallet for you!</h3>
+				<div class="key">
+					<span>Private key: </span>
+					<b>
+					<span id="privateKey">abc</span>
+					</b>
+				</div>
+				<div class="key">
+					<span>Public key: </span>
+					<b>
+					<span id="publicKey"></span>
+					</b>
+				</div>
+
+				<small>
+					<mark>You have to store your private key, and public key for action.</mark>
+				</small>
+				<p class="pb-1 text-muted"><small>
+					<mark>
+						<mark></mark>
+						If you lose your key, you can not access your wallet later.
+					</mark>
+				</small></p>
+				<div class="bottom-strip"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<section class="pb_cover_v3 overflow-hidden  pb_gradient_v1" style="background: #262f36; padding-top: 50px;"
+         id="firstSection">
+	<div class="container">
+		<div class="row align-items-center justify-content-center">
+			<div class="col">
+				<div class="row">
+					<h2 style="color: white; font-size:x-large">Well come, &nbsp;</h2>
+					<h2 style="color: gold; font-size:x-large" id="noMemberID"></h2>
+				</div>
+				<h2 style="color: white;">You are now connected to the My Coin blockchain network</h2>
+				<p class="alert alert-light no-data-text" style="outline: 2px dotted #639ce4">
+					<span style="font-weight: bold;"><i class="fas fa-chalkboard-teacher"></i>First time? </span> <a
+						href="#" id="cd-tour-trigger" style="color: #6166ed; font-weight: bold; font-style: italic;">Click
+					here</a> to get a tour</p>
+				<p style="color: white;">* Reminder: Do not share the private key provided when registering!</p>
+
+				<div class="container" style="padding-top: 0px;">
+					<hr style="background-color: #262f36"/>
+					<div class="row">
+					</div>
+					<div class="row">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+
+<ul class="cd-tour-wrapper">
+	<li class="cd-single-step">
+		<span>Step 1</span>
+
+		<div class="cd-more-info right">
+			<h3>שלב ראשון</h3>
+			<p>זהו הצ'אט - כולם יכולים לשלוח בו הודעות ולבקש הזמנות במידה ועדיין לא הוזמנת.</p>
+		</div>
+	</li>
+
+	<li class="cd-single-step">
+		<span>Step 2</span>
+
+		<div class="cd-more-info bottom">
+			<h2>שלב שני</h2>
+			<p>זהו הארנק שלכם - כאן תוכלו להזין את המפתח הציבורי שקיבלתם בעת הרשמתכם ולראות תנועות בחשבון.</p>
+		</div>
+	</li>
+
+	<li class="cd-single-step">
+		<span>Step 3</span>
+
+		<div class="cd-more-info left">
+			<h2>שלב שלישי</h2>
+			<p>ביצוע עסקאות - כאן תוכלו להעביר מטבעות מהארנק האישי שלכם לארנק של משתמש אחר.</p>
+			<p>על כל השדות להיות מוזנים, ובסיום העסקה היא תועבר למחלקת "עסקאות הממתינות לכריה" (שלב הבא)</p>
+		</div>
+	</li>
+
+	<li class="cd-single-step">
+		<span>Step 4</span>
+
+		<div class="cd-more-info right">
+			<h2>שלב רביעי</h2>
+			<p>עסקאות הממתינות לכריה - כל עסקה אשר מתבצעת עוברת לכאן ומחכה למשתמש כלשהו ברשת שילחץ על כפתור הכריה ובכך
+				"יאשר" את העסקאות הללו.</p>
+		</div>
+	</li>
+</ul>
+<!-- END section -->
+
+<section class="pb_section bg-light pb_slant-white pb_pb-250" id="section-features">
+	<div class="container" ng-controller="walletController" style="padding-bottom: 150px; padding-top: 150px;">
+		<div class="row justify-content-center mb-2">
+			<div class="col-md-6 text-center mb-2">
+				<h2>My wallet</h2>
+				<h5 class="text-uppercase pb_font-15 mb-2 pb_color-dark-opacity-3 pb_letter-spacing-2"><strong>SEE
+					UP-TO-DATE INFORMATION ABOUT YOUR WALLET</strong></h5>
+			</div>
+		</div>
+		<form ng-submit="search(searchValue)">
+			<div class="form-group">
+				<input type="text" class="form-control pb_height-50" placeholder="Enter your public key"
+				       ng-model="searchValue" ng-disabled="dis">
+			</div>
+
+			<div class="form-group">
+				<div class="row">
+					<div class="col-7"><input type="submit" id="myBtn" class="btn btn-secondary align-items-center "
+					                          value="View information" data-toggle="collapse"
+					                          data-target="#collapseWallet" aria-expanded="false"
+					                          aria-controls="collapseWallet" ng-disabled="dis"></div>
+					<div class="col-5">The public key is the <span style="font-weight: bold">second</span> encrypted
+						code given to you when you sign up for the site
+					</div>
+				</div>
+			</div>
+		</form>
+		<div class="row">
+			<div class="collapse" id="collapseWallet">
+				<div class="row">
+					<div class="col-6">
+						<div ng-if="addressData" class="card card-body ">
+
+							<h3 class="table-title" ng-if="addressData">Details of transactions</h3>
+							<p ng-if="addressData">Displays all user-made transactions: <small style="color: #1d82ff">{{searchValue}}</small>
+							</p>
+							<p id="balance-text" ng-if="addressData">
+								<mark>The amount left over: {{ addressData.addressBalance }} <small>JCN</small></mark>
+							</p>
+							<table class="table table-striped " ng-if="addressData"
+							       style="display: inline; overflow: auto">
+								<thead class="">
+								<tr>
+									<th scope="col" class="">Send send:</th>
+									<th scope="col" class="">addressee:</th>
+									<th scope="col" class="">sum:</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr ng-repeat="transaction in addressData.addressTransactions">
+									<td style="font-size:x-small; max-width: 220px;">{{ transaction.sender }}</td>
+									<td style="font-size:x-small; max-width: 220px;">{{ transaction.recipient }}</td>
+									<td style="font-size:x-small; max-width: 100px;">{{ transaction.amount }}</td>
+								</tr>
+								</tbody>
+							</table>
+						</div>
+
+					</div>
+
+					<div class="col-6">
+
+						<div ng-if="addressData" class="card card-body ">
+
+							<h3 class="table-title" ng-if="addressData">Details of recent expenses</h3>
+							<p ng-if="addressData">
+								<mark>A graph detailing recent payments</mark>
+							</p>
+							<p id="balance-text" ng-if="addressData">Sorted by dates and amounts sent on those dates by User: <small> {{searchValue}} </small></p>
+
+
+							<canvas ng-if="addressData" id="myChart" width="100" height="50"></canvas>
+							<script>
+
+                                document.getElementById("myBtn").addEventListener("click", displayChart);
+
+                                function displayChart() {
+                                    setTimeout(function () {
+
+                                        var dom_el = document.querySelector('[ng-controller="walletController"]');
+                                        var ng_el = angular.element(dom_el);
+                                        var ng_el_scope = ng_el.scope();
+                                        var amounts = ng_el_scope.addressData;
+                                        var transactions = amounts.addressTransactions;
+                                        //console.log(ng_el_scope.addressData.addressBalance);
+                                        //console.log(transactions[0].date);
+
+
+                                        var ctx = document.getElementById("myChart").getContext('2d');
+                                        var myLineChart = new Chart(ctx, {
+                                            type: 'line',
+                                            data: {
+                                                labels: [],
+                                                datasets: [{
+                                                    label: 'Account Balance',
+                                                    data: [],
+                                                    borderWidth: 1
+                                                }]
+                                            },
+                                            options: {
+                                                scales: {
+                                                    yAxes: [{
+                                                        ticks: {
+                                                            beginAtZero: false
+                                                        }
+                                                    }]
+                                                }
+                                            }
+                                        });
+
+                                        for (var i = 0; i < transactions.length; i++) {
+                                            myLineChart.data.datasets[0].data.push(ng_el_scope.addressData.amountArr[i]);
+                                            myLineChart.data.labels.push(transactions[i].date);
+                                            myLineChart.update();
+                                        }
+                                        //console.log(myLineChart);
+                                    }, 1000);
+                                }
+
+							</script>
+
+							<a ng-if="addressData" href="#lastTransactions" class="text-left"><small>צפה בעסקאות אחרונות
+								והתחל בתהליך כריה</small></a>
+
+						</div>
+
+					</div>
+
+					<div ng-if="!block && !transaction && !addressData && initialSearchMade" class="no-data-text">
+
+
+						<p>
+							<mark>No result for search key: <small>{{searchValue}}</small></mark>
+						</p>
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</section>
+<!-- END section -->
+
+
+<section class="pb_section pb_slant-light" id="makeTransaction">
+	<div class="container" ng-controller="transactionController" ng-init="acceptedTransaction"
+	     style="padding-top: 100px;">
+		<div class="row">
+			<div class="col-lg-4 mb-5">
+				<img src="./assets/images/Blockchain.png" alt="Image placeholder" class="img-fluid">
+			</div>
+			<div class="col-lg-8 pl-md-5 pl-sm-0">
+				<div class="row">
+					<div class="col">
+						<h2>Submit My Coin</h2>
+						<p class="pb_font-20">Transfer virtual currency (JCN) to another account</p>
+					</div>
+				</div>
+
+				<form name="sendCoins" novalidate>
+					<div class="row">
+						<div class="col-lg">
+
+							<div class="media pb_feature-v2 mb-1 mt-5">
+								<i class="fas fa-dollar-sign fa-1x"></i>
+								<div class="media-body">
+									<h3 class="mt-2 mb-2 heading">Amount to be send</h3>
+									<input type="text" name="amountToTransfer" class="form-control text-sans-serif"
+									       placeholder="Amount" ng-model="amountToTransfer" required>
+
+								</div>
+							</div>
+
+							<div class="media pb_feature-v2 mb-1 mt-5">
+								<i class="fas fa-user-plus"></i>
+								<div class="media-body">
+									<h3 class="mt-2 mb-2 heading">The sender</h3>
+									<input type="text" class="form-control text-sans-serif" placeholder="The sender"
+									       name="pubKey" ng-model="pubKey" required>
+								</div>
+							</div>
+
+						</div>
+						<div class="col-lg">
+
+							<div class="media pb_feature-v2  mb-1 mt-5">
+								<i class="fas fa-key fa-1x"></i>
+								<div class="media-body">
+									<h3 class="mt-2 mb-2 heading">privateKey</h3>
+									<input type="text" class="form-control text-sans-serif" placeholder="private key"
+									       name="privKey" ng-model="privKey" required>
+								</div>
+							</div>
+							<div class="media pb_feature-v2  mb-1 mt-5">
+								<i class="fas fa-user-check"></i>
+								<div class="media-body">
+									<h3 class="mt-2 mb-2 heading">the recipient</h3>
+									<input type="text" class="form-control text-sans-serif" placeholder="the recipient"
+									       name="pubKeyOfRecipient" ng-model="pubKeyOfRecipient" required>
+								</div>
+							</div>
+							<br/>
+							<div class="row">
+								<div class="col-7"></div>
+								<div class="col-5">
+									<div data-toggle="modal" data-target="#transactionModal">
+										<a class="tip"><input type="submit" class="btn btn-success pb_btn-pill"
+										                      value="Make a transfer"
+										                      ng-click="transactionCoins(amountToTransfer, privKey, pubKey, pubKeyOfRecipient)"
+										                      ng-disabled="sendCoins.amountToTransfer.$invalid || sendCoins.pubKey.$invalid || sendCoins.pubKeyOfRecipient.$invalid || sendCoins.privKey.$invalid">
+											<div style="color: white"
+											     ng-hide="sendCoins.amountToTransfer.$valid && sendCoins.pubKey.$valid && sendCoins.pubKeyOfRecipient.$valid && sendCoins.privKey.$valid">
+												<small>הכפתור יהפוך לפעיל <span style="color: yellow">לאחר</span> השלמת
+													הטופס</small></div>
+										</a>
+									</div>
+								</div>
+							</div>
+						</div>
+
+					</div>
+					<span class="text-sans-serif "
+					      ng-show="sendCoins.amountToTransfer.$touched && sendCoins.amountToTransfer.$invalid || sendCoins.pubKey.$touched && sendCoins.pubKey.$invalid || sendCoins.pubKeyOfRecipient.$touched && sendCoins.pubKeyOfRecipient.$invalid || sendCoins.privKey.$touched && sendCoins.privKey.$invalid"><mark>In order to submit the form - you need to enter all the fields in the form</mark></span><br/>
+					<span class="text-sans-serif "
+					      ng-show="sendCoins.amountToTransfer.$touched && sendCoins.amountToTransfer.$invalid || sendCoins.pubKey.$touched && sendCoins.pubKey.$invalid || sendCoins.pubKeyOfRecipient.$touched && sendCoins.pubKeyOfRecipient.$invalid || sendCoins.privKey.$touched && sendCoins.privKey.$invalid"><small
+							style="color: red; font-weight: bold; text-decoration: underline">The following errors were detected:</small></span>
+					<br/>
+					<span class="text-sans-serif "
+					      ng-show="sendCoins.amountToTransfer.$touched && sendCoins.amountToTransfer.$invalid"><small>It is mandatory to enter an amount to send</small></span>
+					<br/>
+					<span class="text-sans-serif "
+					      ng-show="sendCoins.pubKey.$touched && sendCoins.pubKey.$invalid"><small>- The public key of the sender must be entered</small></span>
+					<br/>
+					<span class="text-sans-serif "
+					      ng-show="sendCoins.pubKeyOfRecipient.$touched && sendCoins.pubKeyOfRecipient.$invalid"><small>- The recipient's public key must be entered</small></span>
+					<br/>
+					<span class="text-sans-serif "
+					      ng-show="sendCoins.privKey.$touched && sendCoins.privKey.$invalid"><small>It is mandatory to enter a personal key of the sender</small></span>
+
+
+					<!-- Modal -->
+					<div class="modal fade" id="transactionModal" tabindex="-1" role="dialog"
+					     aria-labelledby="transactionModal" aria-hidden="true">
+
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="exampleModalLabel">Confirmation of transaction</h5>
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+										<span aria-hidden="true">&times;</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<div class="row">
+										<div class="card card-body ">
+
+											<h3 class="table-title" ng-if="acceptedTransaction">The transaction was completed successfully</h3>
+
+
+											<!-- 'display transaction' table -->
+											<h3 class="table-title" ng-if="acceptedTransaction">Invoicing:</h3>
+											<table class="table table-striped" ng-if="acceptedTransaction">
+												<tbody>
+												<tr>
+													<td class="bold">sender:</td>
+													<td>{{ pubKey }}</td>
+												</tr>
+												<tr>
+													<td class="bold">addressee:</td>
+													<td>{{ pubKeyOfRecipient }}</td>
+												</tr>
+												<tr>
+													<td class="bold">Amount of coins:</td>
+													<td>{{ amountToTransfer }}</td>
+												</tr>
+												</tbody>
+											</table>
+											<!-- end 'display transaction' table -->
+											<a class="text-left" ng-if="acceptedTransaction">
+												<mark>Download invoice</mark>
+											</a>
+												<h3 class="table-title" ng-if="declineTransaction">The deal failed</h3>
+											<p ng-if="declineTransaction">For one of the following reasons:</p>
+											<ul ng-if="declineTransaction">
+												<li ng-if="declineTransaction">The sender / recipient public key was not entered correctly</li>
+												<li ng-if="declineTransaction">The sender's private key does not match the sender's public key
+												</li>
+												<li ng-if="declineTransaction">Your balance is not sufficient to transfer the requested amount of coins</li>
+												<li ng-if="declineTransaction">You cannot transfer 0 coins or less</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</form>
+
+			</div>
+		</div>
+	</div>
+</section>
+<!-- END section -->
+
+
+<section class="pb_section bg-light pb_slant-white" id="lastTransactions">
+	<div class="container" ng-controller="pendingTransactionsController"
+	     style="padding-bottom: 200px; padding-top: 100px;">
+		<div class="row justify-content-center mb-2">
+			<div class="col-md-6 text-center mb-2">
+				<h2>Transaction list</h2>
+				<h5 class="text-uppercase pb_font-15 mb-2 pb_color-dark-opacity-3 pb_letter-spacing-2"><strong>HERE YOU
+					CAN SEE RECENT DEALS THAT HAVE BEEN MADE WAITING FOR MINING</strong></h5>
+			</div>
+		</div>
+
+		<div class="row">
+			<small style="color: red;">* Note - Mining cannot be performed when the table is empty / contains only one
+				transfer from system-reward!</small>
+			<table id="lastTransactionsTable" class="table table-hover table-bordered" style="overflow: auto">
+				<thead style="background-image: -webkit-gradient(linear, left bottom, right top, from(#6777ed), to(#81cbec)); background-attachment:fixed; color: #fff">
+				<tr>
+					<th>Transaction ID</th>
+					<th>sender</th>
+					<th>address</th>
+					<th>sum</th>
+				</tr>
+				</thead>
+				<tbody id="tbody" style="background: #fff"></tbody>
+			</table>
+		</div>
+		<script>
+            $(document).ready(function () {
+                $('[data-toggle="tooltip"]').tooltip();
+            });
+		</script>
+		<div ng-controller="miningController">
+			<div class="row">
+				<p class="col-10"><small>* The table is update in realtime!</small></p>
+				<div class="col-2" data-toggle="tooltip"
+				     title="By clicking this button you can enable all transactions awaiting approval">
+					<button id="mineButton" class="button1" style="vertical-align:middle" ng-click="mine()"><span>Perform mining</span>
+					</button>
+				</div>
+			</div>
+			<p class="alert alert-light no-data-text" style="outline: 2px dotted #639ce4" ng-if="mineSuccesss">
+				<span style="font-weight: bold;">הכריה התבצעה בהצלחה!</span> כעת העסקאות הושלמו והמטבעות התעדכנו בארנקים
+				הדיגיטלים.
+			</p>
+		</div>
+	</div>
+
+</section>
+
+
+<footer class="pb_footer bg-light" role="contentinfo">
+	<div class="container">
+
+		<div class="row">
+			<div class="col text-center">
+				<div class="col">
+					<ul class="list-inline" style="padding-left: 50px;">
+						<li class="list-inline-item"><a href="#" class="p-2"><i class="fab fa-facebook-f"></i></a></li>
+						<li class="list-inline-item"><a href="#" class="p-2"><i class="fab fa-github"></i></a></li>
+						<li class="list-inline-item"><a href="#" class="p-2"><i class="fab fa-linkedin-in"></i></a></li>
+					</ul>
+				</div>
+				<p class="pb_font-14">
+					<a href="index.html">My Coin</a>
+					<br>
+					Software and designed by Mor Cohen - <a href="http://morc.co.il/">portfolio</a>
+				</p>
+			</div>
+		</div>
+	</div>
+</footer>
+
+<!-- loader -->
+<div id="pb_loader" class="show fullscreen">
+	<svg class="circular" width="48px" height="48px">
+		<circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/>
+		<circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+		        stroke="#1d82ff"/>
+		<div style="position: fixed; z-index: 100000; top:39%; right: 44%;"><img
+				src="./assets/css/logo_blockchain_scrolled - Copy - Copy.png"><img/></div>
+	</svg>
+</div>
+
+<script src="./assets/js/jquery.min.js"></script>
+
+<script src="./assets/js/popper.min.js"></script>
+<script src="./assets/js/bootstrap.min.js"></script>
+<script src="./assets/js/slick.min.js"></script>
+<script src="./assets/js/jquery.waypoints.min.js"></script>
+<script src="./assets/js/jquery.easing.1.3.js"></script>
+<script src="./assets/js/main.js"></script>
+<script>
+    window.app = angular.module('BlockExplorer', []);
+    app.controller('searchInBlockchainController', function ($scope, $http) {
+
+        $scope.block = null;
+        $scope.transaction = null;
+        $scope.addressData = null;
+        $scope.initialSearchMade = false;
+        $scope.publicKey = null;
+        $scope.privateKey = null;
+
+        $scope.fetchBlock = function (blockHash) {
+            $http.get(`/block/${blockHash}`)
+                .then(response => {
+                    $scope.block = response.data.block;
+                    $scope.transaction = null;
+                    $scope.addressData = null;
+                });
+        };
+
+        $scope.fetchTransaction = function (transactionId) {
+            $http.get(`/transaction/${transactionId}`)
+                .then(response => {
+                    $scope.transaction = response.data.transaction;
+                    $scope.block = null;
+                    $scope.addressData = null;
+                });
+        };
+
+        $scope.fetchAddressData = function (address) {
+            $http.get(`/address/${address}`)
+                .then(response => {
+                    $scope.addressData = response.data.addressData;
+                    if (!$scope.addressData.addressTransactions.length) $scope
+                        .addressData = null;
+                    $scope.block = null;
+                    $scope.transaction = null;
+                });
+        };
+        $scope.search = function (searchValue) {
+            $scope.initialSearchMade = true;
+            console.log('searchType', $scope.searchType)
+            if ($scope.searchType === 'block') {
+                $scope.fetchBlock(searchValue);
+            } else if ($scope.searchType === 'transaction') {
+                $scope.fetchTransaction(searchValue);
+            } else if ($scope.searchType === 'address') {
+                $scope.fetchAddressData(searchValue);
+            }
+        };
+    });
+
+    ////////////////////////////////////////////////////////////////////
+    app.controller('walletController', function ($scope, $http) {
+        $scope.addressData = null;
+        $scope.initialSearchMade = false;
+        $scope.dis = false;
+
+        $scope.fetchAddressData = function (address) {
+            $http.get(`/address/${address}`)
+                .then(response => {
+                    $scope.addressData = response.data.addressData;
+                    if ($scope.addressData) {
+                        $scope.dis = !$scope.dis;//disable button
+                    }
+                    if (!$scope.addressData.addressTransactions.length) $scope
+                        .addressData = null;
+                    $scope.block = null;
+                    $scope.transaction = null;
+                });
+        };
+        $scope.search = function (searchValue) {
+            $scope.initialSearchMade = true;
+            $scope.fetchAddressData(searchValue);
+        };
+
+
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    app.controller('transactionController', function ($scope, $http) {
+
+        $scope.acceptedTransaction = null;
+        $scope.declineTransaction = null;
+
+        $scope.transactionCoins = function (amountToTransfer, privKey, pubKey, pubKeyOfRecipient) {
+
+            $http({
+                url: '/transaction/broadcast',
+                method: "POST",
+                data: {
+                    "amount": amountToTransfer,
+                    "sender": pubKey,
+                    "recipient": pubKeyOfRecipient,
+                    "privKey": privKey
+                }
+            })
+                .then(function (response) {
+                        // console.log("response");
+                        $('#mineButton').attr("disabled", false);
+                        $scope.acceptedTransaction = true;
+                        $scope.declineTransaction = false;
+                        //console.log(response.data.note);
+                        if (response.data.note === false) {
+                            $scope.acceptedTransaction = false;
+                            $scope.declineTransaction = true;
+                            console.log(response.data.note);
+                        }
+                        //console.log($scope.acceptedTransaction);
+                    },
+                    function (response) {
+                        $scope.acceptedTransaction = false;
+                        $scope.declineTransaction = true;
+                        //console.log("failed");
+                    });
+        }
+
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    app.controller('pendingTransactionsController', function ($scope, $http) {
+
+        $scope.init = function () {
+            $http.get('/pendingTransactions')
+                .then(response => {
+                    $scope.pendingTransactions = response.data.pendingTransactions;
+                });
+        };
+
+        $scope.init();
+
+    });
+
+    ///////////////////////////////////////////////////////////////////
+    app.controller('miningController', function ($scope, $http, $timeout) {
+
+        $scope.mineSuccesss = null;
+
+        $scope.mine = function () {
+            const privateKey = prompt("To activate the function, enter your private key:", "");
+            const publicKey = prompt("To activate the function, enter your public key:", "");
+            $http({
+                url: '/hashKeys',
+                method: "POST",
+                data: {
+                    "key1": privateKey,
+                    "key2": publicKey
+                }
+            })
+                .then(function (response) {
+                        if (response.data.note === false) {
+                            alert("Incompatible keys");
+                        } else {
+                            $http.get('/mine')
+                                .then(response => {//mining sccess
+                                    $("#lastTransactionsTable td").remove();
+                                    $.get('/emitMiningSuccess', (data, status) => {//http request via JQuery
+                                        console.log(data);
+                                    });
+                                    $scope.mineSuccesss = true;
+                                    $timeout(function () {//remove 'mining success' message
+                                        $scope.mineSuccesss = false;
+                                    }, 4000);
+                                    $timeout(function () {
+                                        location.reload();
+                                    }, 5000);
+                                });
+                        }
+                    },
+                    function (response) {
+                    });
+
+        };
+
+    });
+
+
+    ///////////////////////////////////////////////////////////////////
+    app.controller('inviteController', function ($scope, $http) {
+
+        $scope.checkeys = function (email) {
+            var key1 = prompt("להפעלת הפונקציה הזן את המפתח הפרטי שלך:", "");
+            var key2 = prompt("להפעלת הפונקציה הזן את המפתח הציבורי שלך:", "");
+
+
+            $http({
+                url: '/hashKeys',
+                method: "POST",
+                data: {
+                    "key1": key1,
+                    "key2": key2
+                }
+            })
+                .then(function (response) {
+                    if (response.data.note === false) {
+                        alert("מפתחות לא תואמים");
+                    } else {
+                        $http({
+                            url: '/sendInvitation',
+                            method: "POST",
+                            data: {
+                                email: email,
+                                sender: key2
+                            }
+                        })
+                            .then(function (response) {
+                                if (response.data.note === true) {
+                                    alert(`הזמנה נשלחה בהצלחה \n כמות הזמנות שנותרו ברשותך: ${response.data.numOfInv}`);
+                                } else if (response.data.note === false) {
+                                    alert('אין ברשותך הזמנות');
+                                } else if (response.data.note === 'not valid email') {
+                                    alert('נא להזין כתובת אימייל חוקית!');
+                                }
+                            });
+                    }
+                });
+
+        };
+
+    });
+
+</script>
+
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="sockets.js"></script>
+
+<script>
+    window.addEventListener('load', () => {
+        const publicKey = localStorage.getItem('publicKey');
+        if (!publicKey) {
+            $.ajax({
+                url: '/wallet',
+                type: 'POST',
+                success: data => {
+                    console.log(data)
+                    localStorage.setItem('publicKey', data.publicKey);
+                    localStorage.setItem('privateKey', data.privateKey);
+	                $('#publicKey').text(data.publicKey)
+	                $('#privateKey').text(data.privateKey)
+                    $('#newWalletModalTrigger').trigger('click');
+                }
+
+            })
+        }
+    })
+</script>
+
+</body>
+</html>
