@@ -142,11 +142,7 @@ Blockchain.prototype.getAddressData = function (address) {
         });
     });
 
-    if (addressTransactions == null) {
-        return false;
-    }
-
-    var amountArr = [];
+    const amountArr = [];
     
     let balance = 0;
     addressTransactions.forEach(transaction => {

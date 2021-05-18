@@ -44,13 +44,13 @@
 				<li class="nav-item"><a class="nav-link" href="#section-features">My wallet</a></li>
 				<li class="nav-item"><a class="nav-link" href="#makeTransaction">Make a deal</a></li>
 				<li class="nav-item"><a class="nav-link" href="#lastTransactions" style="color:gold !important;"><i
-						class="fas fa-coins"></i> כריה</a></li>
+						class="fas fa-coins"></i>Mining</a></li>
 				<li class="nav-item"><a class="nav-link" href="#about">About Blockchain</a></li>
 
 				<li class="nav-item cta-btn ml-xl-2 ml-lg-2 ml-md-0 ml-sm-0 ml-0"><a id="newWalletModalTrigger" class="nav-link" href=""
 				                                                                     target="_blank" data-toggle="modal"
 				                                                                     data-target="#newWalletModal"><span
-						class="pb_rounded-4 px-4">Take a friend</span></a></li>
+						class="pb_rounded-4 px-4">Create a wallet</span></a></li>
 			</ul>
 		</div>
 	</div>
@@ -132,10 +132,7 @@
 					<h2 style="color: gold; font-size:x-large" id="noMemberID"></h2>
 				</div>
 				<h2 style="color: white;">You are now connected to the My Coin blockchain network</h2>
-				<p class="alert alert-light no-data-text" style="outline: 2px dotted #639ce4">
-					<span style="font-weight: bold;"><i class="fas fa-chalkboard-teacher"></i>First time? </span> <a
-						href="#" id="cd-tour-trigger" style="color: #6166ed; font-weight: bold; font-style: italic;">Click
-					here</a> to get a tour</p>
+
 				<p style="color: white;">* Reminder: Do not share the private key provided when registering!</p>
 
 				<div class="container" style="padding-top: 0px;">
@@ -150,45 +147,6 @@
 	</div>
 </section>
 
-<ul class="cd-tour-wrapper">
-	<li class="cd-single-step">
-		<span>Step 1</span>
-
-		<div class="cd-more-info right">
-			<h3>שלב ראשון</h3>
-			<p>זהו הצ'אט - כולם יכולים לשלוח בו הודעות ולבקש הזמנות במידה ועדיין לא הוזמנת.</p>
-		</div>
-	</li>
-
-	<li class="cd-single-step">
-		<span>Step 2</span>
-
-		<div class="cd-more-info bottom">
-			<h2>שלב שני</h2>
-			<p>זהו הארנק שלכם - כאן תוכלו להזין את המפתח הציבורי שקיבלתם בעת הרשמתכם ולראות תנועות בחשבון.</p>
-		</div>
-	</li>
-
-	<li class="cd-single-step">
-		<span>Step 3</span>
-
-		<div class="cd-more-info left">
-			<h2>שלב שלישי</h2>
-			<p>ביצוע עסקאות - כאן תוכלו להעביר מטבעות מהארנק האישי שלכם לארנק של משתמש אחר.</p>
-			<p>על כל השדות להיות מוזנים, ובסיום העסקה היא תועבר למחלקת "עסקאות הממתינות לכריה" (שלב הבא)</p>
-		</div>
-	</li>
-
-	<li class="cd-single-step">
-		<span>Step 4</span>
-
-		<div class="cd-more-info right">
-			<h2>שלב רביעי</h2>
-			<p>עסקאות הממתינות לכריה - כל עסקה אשר מתבצעת עוברת לכאן ומחכה למשתמש כלשהו ברשת שילחץ על כפתור הכריה ובכך
-				"יאשר" את העסקאות הללו.</p>
-		</div>
-	</li>
-</ul>
 <!-- END section -->
 
 <section class="pb_section bg-light pb_slant-white pb_pb-250" id="section-features">
@@ -312,8 +270,7 @@
 
 							</script>
 
-							<a ng-if="addressData" href="#lastTransactions" class="text-left"><small>צפה בעסקאות אחרונות
-								והתחל בתהליך כריה</small></a>
+							<a ng-if="addressData" href="#lastTransactions" class="text-left"><small>View recent transactions and start the mining process</small></a>
 
 						</div>
 
@@ -543,8 +500,7 @@
 				</div>
 			</div>
 			<p class="alert alert-light no-data-text" style="outline: 2px dotted #639ce4" ng-if="mineSuccesss">
-				<span style="font-weight: bold;">הכריה התבצעה בהצלחה!</span> כעת העסקאות הושלמו והמטבעות התעדכנו בארנקים
-				הדיגיטלים.
+				<span style="font-weight: bold;">The mining was carried out successfully!</span> Now the deals have been completed and the currencies have been updated in the wallets.
 			</p>
 		</div>
 	</div>
@@ -625,7 +581,7 @@
         $scope.fetchAddressData = function (address) {
             $http.get(`/address/${address}`)
                 .then(response => {
-                    $scope.addressData = response.data.addressData;
+                    $scope.addressData = response.data;
                     if (!$scope.addressData.addressTransactions.length) $scope
                         .addressData = null;
                     $scope.block = null;
@@ -635,13 +591,7 @@
         $scope.search = function (searchValue) {
             $scope.initialSearchMade = true;
             console.log('searchType', $scope.searchType)
-            if ($scope.searchType === 'block') {
-                $scope.fetchBlock(searchValue);
-            } else if ($scope.searchType === 'transaction') {
-                $scope.fetchTransaction(searchValue);
-            } else if ($scope.searchType === 'address') {
-                $scope.fetchAddressData(searchValue);
-            }
+            $scope.fetchAddressData(searchValue);
         };
     });
 
@@ -654,10 +604,10 @@
         $scope.fetchAddressData = function (address) {
             $http.get(`/address/${address}`)
                 .then(response => {
-                    $scope.addressData = response.data.addressData;
-                    if ($scope.addressData) {
-                        $scope.dis = !$scope.dis;//disable button
-                    }
+                    $scope.addressData = response.data;
+                    // if ($scope.addressData) {
+                    //     $scope.dis = !$scope.dis;//disable button
+                    // }
                     if (!$scope.addressData.addressTransactions.length) $scope
                         .addressData = null;
                     $scope.block = null;
@@ -681,13 +631,13 @@
         $scope.transactionCoins = function (amountToTransfer, privKey, pubKey, pubKeyOfRecipient) {
 
             $http({
-                url: '/transaction/broadcast',
+                url: '/newTransaction',
                 method: "POST",
                 data: {
                     "amount": amountToTransfer,
-                    "sender": pubKey,
+                    "publicKey": pubKey,
                     "recipient": pubKeyOfRecipient,
-                    "privKey": privKey
+                    "privateKey": privKey
                 }
             })
                 .then(function (response) {
@@ -746,19 +696,19 @@
                         if (response.data.note === false) {
                             alert("Incompatible keys");
                         } else {
-                            $http.get('/mine')
+                            $http.post('/mine', {privateKey, publicKey})
                                 .then(response => {//mining sccess
                                     $("#lastTransactionsTable td").remove();
                                     $.get('/emitMiningSuccess', (data, status) => {//http request via JQuery
                                         console.log(data);
                                     });
                                     $scope.mineSuccesss = true;
-                                    $timeout(function () {//remove 'mining success' message
+                                    /*$timeout(function () {//remove 'mining success' message
                                         $scope.mineSuccesss = false;
-                                    }, 4000);
-                                    $timeout(function () {
-                                        location.reload();
-                                    }, 5000);
+                                    }, 40000);*/
+                                    // $timeout(function () {
+                                    //     location.reload();
+                                    // }, 41000);
                                 });
                         }
                     },
@@ -788,7 +738,7 @@
             })
                 .then(function (response) {
                     if (response.data.note === false) {
-                        alert("מפתחות לא תואמים");
+                        alert("Incompatible keys");
                     } else {
                         $http({
                             url: '/sendInvitation',
@@ -817,27 +767,42 @@
 </script>
 
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="sockets.js"></script>
+<!--<script src="/socket.io/socket.io.js"></script>-->
+<script src="./sockets.js"></script>
 
 <script>
     window.addEventListener('load', () => {
         const publicKey = localStorage.getItem('publicKey');
-        if (!publicKey) {
-            $.ajax({
-                url: '/wallet',
-                type: 'POST',
-                success: data => {
-                    console.log(data)
-                    localStorage.setItem('publicKey', data.publicKey);
-                    localStorage.setItem('privateKey', data.privateKey);
-	                $('#publicKey').text(data.publicKey)
-	                $('#privateKey').text(data.privateKey)
-                    $('#newWalletModalTrigger').trigger('click');
-                }
+        // if (!publicKey) {
+        //     $.ajax({
+        //         url: '/wallet',
+        //         type: 'POST',
+        //         success: data => {
+        //             console.log(data)
+        //             localStorage.setItem('publicKey', data.publicKey);
+        //             localStorage.setItem('privateKey', data.privateKey);
+	    //             $('#publicKey').text(data.publicKey)
+	    //             $('#privateKey').text(data.privateKey)
+        //             $('#newWalletModalTrigger').trigger('click');
+        //         }
+		//
+        //     })
+        // }
+    })
+    $('#newWalletModalTrigger').on('click', event => {
+        $.ajax({
+            url: '/wallet',
+            type: 'POST',
+            success: data => {
+                console.log(data)
+                localStorage.setItem('publicKey', data.publicKey);
+                localStorage.setItem('privateKey', data.privateKey);
+                $('#publicKey').text(data.publicKey)
+                $('#privateKey').text(data.privateKey)
+                // $('#newWalletModalTrigger').trigger('click');
+            }
 
-            })
-        }
+        })
     })
 </script>
 

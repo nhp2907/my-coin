@@ -4,20 +4,57 @@
  * Author: Mor Cohen
  * Date: 15/10/18
  */
-
+//
 var objForDupCheck = null;
-var socket = io();
+// var socket = io();
+//
+// socket.on('connect', () => {
+//     //console.log(socket);
+//     document.getElementById("noMemberID").innerHTML = socket.id;
+// });
+let config;
+console.log('socket.js')
 
-socket.on('connect', () => {
-    //console.log(socket);
-    document.getElementById("noMemberID").innerHTML = socket.id;
-});
+function setupWS() {
+    $.ajax({
+        url: '/config',
+        type: 'GET',
+        success: data => {
+            config = data;
+
+            console.log('wsPort: ', config.wsPort)
+                const ws = new WebSocket(`ws://localhost:${config.wsPort}`);
+            ws.onopen = function () {
+                console.log('onopen');
+                ws.send('hello boss');
+            }
+
+            ws.onmessage = function (e) {
+
+                const event = JSON.parse(e.data);
+                switch (event.type) {
+                    case 'new-pending-tx':
+                        handleNewPt([event.data]);
+                    case 'mine-success':
+                        handleMineSuccess(event.data);
+                        break;
+                    default:
+                        return;
+                }
+            }
+
+
+        }
+
+    })
+}
+
+setupWS();
 
 function sendMessage(message) {
     if (!message.replace(/\s/g, '').length) {
         alert("An empty message could not be sent");
-    }
-    else {
+    } else {
         message = message.replace(/</g, "&lt;").replace(/>/g, "&gt;");
         socket.emit('getNewMessage', {
             message: message,
@@ -26,47 +63,7 @@ function sendMessage(message) {
     }
 };
 
-
-socket.on('newMessage', (message) => {
-    document.getElementById("btn-input").value = null;
-    var d = new Date();
-    var month = d.getMonth() + 1;
-    var day = d.getDate();
-    var output = d.getFullYear();
-    var hour = d.getHours();
-    var minutes = d.getMinutes();
-    var id;
-    $('#chat').append(
-        '<li class="right clearfix">' +
-        '<div class="chat-body clearfix">' +
-        '<div class="header">' +
-        '<div class="row">' +
-        '<strong class="col-6 pull-right primary-font">' +
-        '<span style="color: gold">' +
-        'מספר משתמש: ' +
-        '</span>' +
-        (message.id === socket.id ? '<span style="color: #1d82ff;">' : '<span>') +
-        message.id +
-        '</span>' +
-        '</strong>' +
-        '<small class="col-6 text-muted text-left">' +
-        hour + ':' + minutes + ' ' +
-        (('' + day).length < 2 ? '0' : '') + day + '/' +
-        (('' + month).length < 2 ? '0' : '') + month + '/' +
-        output +
-        '</small>' +
-        '</div >' +
-        '</div >' +
-        '<p>' +
-        message.message +
-        '</p>' +
-        '</div >' +
-        '</li >');
-    var s = $("#chat > li:last-child").position();
-    $("div").scrollTop(s.top);
-});
-
-socket.on('PT', (pt) => {
+const handleNewPt = (pt) => {
     console.log('pt', pt);
     var rows = document.getElementById("lastTransactionsTable").getElementsByTagName("tr").length;
     var row = document.getElementById("mineButton");
@@ -110,18 +107,20 @@ socket.on('PT', (pt) => {
         }
     }
 
-});
-socket.on('mineSuccess', (trueOrFalse) => {//after mining success - display a meassage to all users
+}
+
+const handleMineSuccess = (trueOrFalse) => {//after mining success - display a meassage to all users
     function removePopUp() {
         $("#alert").remove();
     }
+
     if (trueOrFalse === true) {//i could use JQuery
         var alert = document.createElement("div");
         alert.setAttribute("class", "alert alert-success");
         alert.setAttribute("id", "alert");
         alert.setAttribute("style", "position: fixed; bottom: 0; width: 100 %; z-index:1000;");
-        alert.innerHTML = '<strong>' + "הודעה גלובלית - " + '</strong>' + "אחד המשתמשים ביצע כריה בהצלחה!";
+        alert.innerHTML = '<strong>' + "Global Post -" + '</strong>' + "One user successfully mined!";
         document.getElementsByTagName("body")[0].appendChild(alert);
         setTimeout(removePopUp, 5000);
     }
-});
+}
