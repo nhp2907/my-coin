@@ -1,5 +1,7 @@
 # My Coin cryptocurrency
 
+This project is refered from: https://github.com/morco6/Blockchain-Project-websocket
+
 ### Personal blockchain project in subject "Công nghệ mới"
 Build a cryptocurrency and wallet named My Coin with features: 
     - Create wallet
